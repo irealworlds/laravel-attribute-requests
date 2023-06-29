@@ -4,6 +4,7 @@ namespace Ireal\AttributeRequests\Services;
 
 use Illuminate\Contracts\Container\Container;
 use Ireal\AttributeRequests\Attributes\RequestPropertyMapper;
+use Ireal\AttributeRequests\Attributes\RequestPropertyName;
 use Ireal\AttributeRequests\Contracts\{IRequestMappingService, ITypeAnalysisService};
 use Ireal\AttributeRequests\Mappers\{BackedEnumRequestPropertyMapper,
     BooleanRequestPropertyMapper,
@@ -108,5 +109,18 @@ readonly class RequestMappingService implements IRequestMappingService
         }
 
         return $this->getMapperForType($property->getType());
+    }
+
+    /** @inheritDoc */
+    public function getRequestNameForProperty(ReflectionProperty $property): string {
+        $attributes = $property->getAttributes(RequestPropertyName::class);
+
+        if (!empty($attributes)) {
+            /** @var RequestPropertyName $attribute */
+            $attribute = $attributes[0]->newInstance();
+            return $attribute->name;
+        }
+
+        return $property->getName();
     }
 }

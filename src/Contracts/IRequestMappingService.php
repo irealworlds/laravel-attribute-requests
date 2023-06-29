@@ -50,4 +50,13 @@ interface IRequestMappingService
      * @throws ReflectionException
      */
     public function getMapperForProperty(ReflectionProperty $property): string;
+
+    /**
+     * Get the name of the incoming request property that should be mapped to the object {@link $property}.
+     *
+     * @param ReflectionProperty $property
+     * @return class-string<IRequestPropertyMapper>
+     * @throws ReflectionException
+     */
+    public function getRequestNameForProperty(ReflectionProperty $property): string;
 }
