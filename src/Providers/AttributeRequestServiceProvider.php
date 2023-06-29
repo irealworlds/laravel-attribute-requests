@@ -14,7 +14,7 @@ class AttributeRequestServiceProvider extends ServiceProvider
     public function boot(): void {
         // Publish configuration
         $this->publishes([
-            __DIR__ . '/../../config/requests.php' => config_path('requests.php'),
+            __DIR__ . '/../../config/requests.php' => $this->app->configPath('requests.php'),
         ]);
 
         // Merge configuration
