@@ -105,11 +105,7 @@ class TypeAnalysisService implements ITypeAnalysisService
             }
 
             // If this class' constructor has required parameters, it cannot be mapped
-            return ! ($class->getConstructor()?->getNumberOfRequiredParameters()) 
-                 
-            
-
-             ;
+            return ! ($class->getConstructor()?->getNumberOfRequiredParameters());
         }
     }
 
@@ -136,6 +132,7 @@ class TypeAnalysisService implements ITypeAnalysisService
 
     /**
      * @inheritDoc
+     * @throws ReflectionException
      */
     public function isIterableType(ReflectionNamedType $type): bool {
         if ($type->isBuiltin()) {
