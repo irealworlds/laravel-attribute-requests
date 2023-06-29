@@ -45,5 +45,12 @@ public function store(PostStoreRequest $request)
 }
 ```
 
+While the usage is similar to what you could do in Laravel by default, there are certain advantages to this approach.
+For example:
+* **Strong Typing:** Leverage the power of PHP's type hinting to enforce the type of each attribute, preventing potential type-related errors.
+* **Automatic Validation:** The package automatically validates incoming requests based on the defined DTO rules, reducing the need for manual validation code. [More on validation](https://github.com/iRealWorlds/laravel-attribute-requests/wiki/Validation)
+* **Compatibility:** The package is designed to work seamlessly with Laravel, leveraging its features and conventions.
+* **IDE hinting:** Using this type of writing requests helps IDEs know what type of properties you are expecting, allowing them to help you when developing and enabling refactoring to be that much easier.
+
 ## Documentation
 You can read the full documentation on the [package's wiki page](https://github.com/iRealWorlds/laravel-attribute-requests/wiki).
