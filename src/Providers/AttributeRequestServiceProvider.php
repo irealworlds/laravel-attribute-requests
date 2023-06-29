@@ -3,9 +3,20 @@
 namespace Ireal\AttributeRequests\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Ireal\AttributeRequests\Contracts\ITypeAnalysisService;
+use Ireal\AttributeRequests\Services\TypeAnalysisService;
 
 class AttributeRequestServiceProvider extends ServiceProvider
 {
+    /**
+     * All the container bindings that should be registered.
+     *
+     * @var array
+     */
+    public array $bindings = [
+        ITypeAnalysisService::class => TypeAnalysisService::class
+    ];
+
     /**
      * Bootstrap any application services.
      *
@@ -22,5 +33,13 @@ class AttributeRequestServiceProvider extends ServiceProvider
             __DIR__ . '/../../config/requests.php',
             'requests'
         );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function provides(): array
+    {
+        return array_keys($this->bindings);
     }
 }
