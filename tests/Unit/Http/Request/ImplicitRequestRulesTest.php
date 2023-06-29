@@ -7,22 +7,16 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\Rules\Enum;
 use Ireal\AttributeRequests\Http\Request;
-use Ireal\Tests\Fakes\ComplexNumber;
-use Ireal\Tests\Fakes\Enums\Color;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
-use Illuminate\Contracts\Validation\Factory as ValidationFactory;
-use Illuminate\Http\Request as BaseRequest;
-use Ireal\Tests\Fakes\NestedObject;
+use Ireal\Tests\Fakes\{ComplexNumber, Enums\Color, NestedObject};
 
 it('should infer required or nullable from type', function () {
     // Arrange
-    $baseRequest = new BaseRequest([
+    $data = [
         'requiredProperty' => 123,
         'nullableProperty' => null
-    ]);
-    $validationFactory = app()->make(ValidationFactory::class);
-    $configRepository = app()->make(ConfigRepository::class);
-    $request = new class ($baseRequest, $validationFactory, $configRepository) extends Request {
+    ];
+    $request = new class (...getRequestDependencies($data)) extends Request {
         public int $requiredProperty;
         public int|null $nullableProperty;
     };
@@ -44,10 +38,7 @@ it('should infer required or nullable from type', function () {
 
 it('should infer rules for scalar properties', function () {
     // Arrange
-    $baseRequest = new BaseRequest();
-    $validationFactory = app()->make(ValidationFactory::class);
-    $configRepository = app()->make(ConfigRepository::class);
-    $request = new class ($baseRequest, $validationFactory, $configRepository) extends Request {
+    $request = new class (...getRequestDependencies()) extends Request {
         public ?bool $booleanProperty;
 
         public ?string $stringProperty;
@@ -83,10 +74,7 @@ it('should infer rules for scalar properties', function () {
 
 it('should infer rules for file properties', function (): void {
     // Arrange
-    $baseRequest = new BaseRequest();
-    $validationFactory = app()->make(ValidationFactory::class);
-    $configRepository = app()->make(ConfigRepository::class);
-    $request = new class ($baseRequest, $validationFactory, $configRepository) extends Request {
+    $request = new class (...getRequestDependencies()) extends Request {
         public ?SplFileInfo $fileProperty1;
         public ?UploadedFile $fileProperty2;
     };
@@ -108,10 +96,7 @@ it('should infer rules for file properties', function (): void {
 
 it('should infer rules for date properties', function (): void {
     // Arrange
-    $baseRequest = new BaseRequest();
-    $validationFactory = app()->make(ValidationFactory::class);
-    $configRepository = app()->make(ConfigRepository::class);
-    $request = new class ($baseRequest, $validationFactory, $configRepository) extends Request {
+    $request = new class (...getRequestDependencies()) extends Request {
         public ?DateTimeInterface $dateProperty1;
         public ?DateTime $dateProperty2;
         public ?Carbon $dateProperty3;
@@ -141,10 +126,7 @@ it('should infer rules for date properties', function (): void {
 
 it('should infer rules for iterable properties', function (): void {
     // Arrange
-    $baseRequest = new BaseRequest();
-    $validationFactory = app()->make(ValidationFactory::class);
-    $configRepository = app()->make(ConfigRepository::class);
-    $request = new class ($baseRequest, $validationFactory, $configRepository) extends Request {
+    $request = new class (...getRequestDependencies()) extends Request {
         public ?array $iterableProperty1;
         public ?iterable $iterableProperty2;
         public ?Collection $iterableProperty3;
@@ -170,10 +152,7 @@ it('should infer rules for iterable properties', function (): void {
 
 it('should infer rules for standard objects', function (): void {
     // Arrange
-    $baseRequest = new BaseRequest();
-    $validationFactory = app()->make(ValidationFactory::class);
-    $configRepository = app()->make(ConfigRepository::class);
-    $request = new class ($baseRequest, $validationFactory, $configRepository) extends Request {
+    $request = new class (...getRequestDependencies()) extends Request {
         public ?object $objectProperty1;
     };
 
@@ -189,10 +168,7 @@ it('should infer rules for standard objects', function (): void {
 
 it('should infer rules for class objects', function (): void {
     // Arrange
-    $baseRequest = new BaseRequest();
-    $validationFactory = app()->make(ValidationFactory::class);
-    $configRepository = app()->make(ConfigRepository::class);
-    $request = new class ($baseRequest, $validationFactory, $configRepository) extends Request {
+    $request = new class (...getRequestDependencies()) extends Request {
         public ?ComplexNumber $objectProperty2;
     };
 
@@ -219,12 +195,10 @@ it('should infer rules for nested class objects up to the configured max depth',
     /** @var ConfigRepository $config */
     $config = app()->make(ConfigRepository::class);
     $config->set('requests.nested_validation_depth', $depth);
-    $baseRequest = new BaseRequest([
+    $data = [
         'object' => []
-    ]);
-    $validationFactory = app()->make(ValidationFactory::class);
-    $configRepository = app()->make(ConfigRepository::class);
-    $request = new class ($baseRequest, $validationFactory, $configRepository) extends Request {
+    ];
+    $request = new class (...getRequestDependencies($data)) extends Request {
         public NestedObject $object;
     };
 
@@ -251,10 +225,7 @@ it('should infer rules for nested class objects up to the configured max depth',
 
 it('should infer rules for backed enums', function (): void {
     // Arrange
-    $baseRequest = new BaseRequest();
-    $validationFactory = app()->make(ValidationFactory::class);
-    $configRepository = app()->make(ConfigRepository::class);
-    $request = new class ($baseRequest, $validationFactory, $configRepository) extends Request {
+    $request = new class (...getRequestDependencies()) extends Request {
         public ?Color $backedEnumProperty1;
     };
 
@@ -276,10 +247,7 @@ it('should infer rules for backed enums', function (): void {
 
 it('should not infer rules from untyped properties', function (): void {
     // Arrange
-    $baseRequest = new BaseRequest();
-    $validationFactory = app()->make(ValidationFactory::class);
-    $configRepository = app()->make(ConfigRepository::class);
-    $request = new class ($baseRequest, $validationFactory, $configRepository) extends Request {
+    $request = new class (...getRequestDependencies()) extends Request {
         public $untypedProperty;
     };
 

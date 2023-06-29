@@ -3,26 +3,16 @@
 /** @noinspection PhpUnused */
 
 use Carbon\Carbon;
-use Illuminate\Contracts\Config\Repository as ConfigRepository;
-use Illuminate\Contracts\Validation\Factory as ValidationFactory;
-use Illuminate\Http\Request as BaseRequest;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Enumerable;
+use Illuminate\Support\{Collection, Enumerable};
 use Ireal\AttributeRequests\Http\Request;
-use Ireal\Tests\Fakes\ComplexNumber;
-use Ireal\Tests\Fakes\Enums\Color;
-use Ireal\Tests\Fakes\Enums\DayOfTheWeek;
-use Ireal\Tests\Fakes\NestedObject;
+use Ireal\Tests\Fakes\{ComplexNumber, Enums\Color, Enums\DayOfTheWeek, NestedObject};
 use function Pest\Faker\fake;
 
 it('should map null to nullable values', function (array $data): void {
     // Arrange
-    $baseRequest = new BaseRequest($data);
-    $validationFactory = app()->make(ValidationFactory::class);
-    $configRepository = app()->make(ConfigRepository::class);
 
     // Act
-    $request = new class ($baseRequest, $validationFactory, $configRepository) extends Request {
+    $request = new class (...getRequestDependencies($data)) extends Request {
         public int|null $nullProperty;
     };
 
@@ -54,12 +44,9 @@ it('should map scalar types', function (): void {
         'booleanProperty5' => "1",
         'booleanProperty6' => "0",
     ];
-    $baseRequest = new BaseRequest($data);
-    $validationFactory = app()->make(ValidationFactory::class);
-    $configRepository = app()->make(ConfigRepository::class);
 
     // Act
-    $request = new class ($baseRequest, $validationFactory, $configRepository) extends Request {
+    $request = new class (...getRequestDependencies($data)) extends Request {
         public int $intProperty1;
         public int $intProperty2;
 
@@ -120,12 +107,9 @@ it('should map iterable types', function (): void {
         'iterableProperty1' => $this->faker->words(7),
         'iterableProperty2' => $this->faker->words(7),
     ];
-    $baseRequest = new BaseRequest($data);
-    $validationFactory = app()->make(ValidationFactory::class);
-    $configRepository = app()->make(ConfigRepository::class);
 
     // Act
-    $request = new class ($baseRequest, $validationFactory, $configRepository) extends Request {
+    $request = new class (...getRequestDependencies($data)) extends Request {
         public Collection $collectionProperty1;
         public Enumerable $collectionProperty2;
         public ArrayAccess $collectionProperty3;
@@ -162,12 +146,9 @@ it('should map date types', function (): void {
         'dateTimeProperty2' => Carbon::parse($this->faker->dateTime())->toIso8601String(),
         'dateTimeProperty3' => Carbon::parse($this->faker->dateTime())->toIso8601String(),
     ];
-    $baseRequest = new BaseRequest($data);
-    $validationFactory = app()->make(ValidationFactory::class);
-    $configRepository = app()->make(ConfigRepository::class);
 
     // Act
-    $request = new class ($baseRequest, $validationFactory, $configRepository) extends Request {
+    $request = new class (...getRequestDependencies($data)) extends Request {
         public Carbon $dateProperty1;
         public DateTimeInterface $dateProperty2;
         public DateTime $dateProperty3;
@@ -199,12 +180,9 @@ it('should map backed enum types', function (): void {
         'stringBackedEnum' => $this->faker->randomElement(Color::cases())->value,
         'intBackedEnum' => $this->faker->randomElement(DayOfTheWeek::cases())->value,
     ];
-    $baseRequest = new BaseRequest($data);
-    $validationFactory = app()->make(ValidationFactory::class);
-    $configRepository = app()->make(ConfigRepository::class);
 
     // Act
-    $request = new class ($baseRequest, $validationFactory, $configRepository) extends Request {
+    $request = new class (...getRequestDependencies($data)) extends Request {
         public Color $stringBackedEnum;
         public DayOfTheWeek $intBackedEnum;
     };
@@ -224,12 +202,9 @@ it('should map standard objects', function (): void {
             'c' => 'd'
         ]
     ];
-    $baseRequest = new BaseRequest($data);
-    $validationFactory = app()->make(ValidationFactory::class);
-    $configRepository = app()->make(ConfigRepository::class);
 
     // Act
-    $request = new class ($baseRequest, $validationFactory, $configRepository) extends Request {
+    $request = new class (...getRequestDependencies($data)) extends Request {
         public object $simpleObjectProperty;
     };
 
@@ -249,12 +224,9 @@ it('should map class defined object', function (): void {
             true
         )
     ];
-    $baseRequest = new BaseRequest($data);
-    $validationFactory = app()->make(ValidationFactory::class);
-    $configRepository = app()->make(ConfigRepository::class);
 
     // Act
-    $request = new class ($baseRequest, $validationFactory, $configRepository) extends Request {
+    $request = new class (...getRequestDependencies($data)) extends Request {
         public ComplexNumber $complexNumber;
     };
 
@@ -275,12 +247,9 @@ it('should map nested objects', function (): void {
             true
         )
     ];
-    $baseRequest = new BaseRequest($data);
-    $validationFactory = app()->make(ValidationFactory::class);
-    $configRepository = app()->make(ConfigRepository::class);
 
     // Act
-    $request = new class ($baseRequest, $validationFactory, $configRepository) extends Request {
+    $request = new class (...getRequestDependencies($data)) extends Request {
         public NestedObject $object;
     };
 
