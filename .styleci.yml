@@ -33,7 +33,6 @@ enabled:
   - no_break_comment
   - no_homoglyph_names
   - no_leading_import_slash
-  - no_homoglyph_names
   - no_unused_imports
   - no_unused_lambda_imports
   - no_useless_concat_operator
