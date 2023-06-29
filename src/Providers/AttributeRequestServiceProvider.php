@@ -3,8 +3,8 @@
 namespace Ireal\AttributeRequests\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Ireal\AttributeRequests\Contracts\ITypeAnalysisService;
-use Ireal\AttributeRequests\Services\TypeAnalysisService;
+use Ireal\AttributeRequests\Contracts\{IRequestMappingService, ITypeAnalysisService};
+use Ireal\AttributeRequests\Services\{RequestMappingService, TypeAnalysisService};
 
 class AttributeRequestServiceProvider extends ServiceProvider
 {
@@ -14,7 +14,8 @@ class AttributeRequestServiceProvider extends ServiceProvider
      * @var array
      */
     public array $bindings = [
-        ITypeAnalysisService::class => TypeAnalysisService::class
+        ITypeAnalysisService::class => TypeAnalysisService::class,
+        IRequestMappingService::class => RequestMappingService::class,
     ];
 
     /**
