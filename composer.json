@@ -6,11 +6,20 @@
             "Ireal\\AttributeRequests\\": "src/"
         }
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "\\Ireal\\AttributeRequests\\Providers\\AttributeRequestServiceProvider"
+            ]
+        }
+    },
     "authors": [
         {
             "name": "Marin Calin",
             "email": "marincalin2551@hotmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "illuminate/support": "^10.0"
+    }
 }
