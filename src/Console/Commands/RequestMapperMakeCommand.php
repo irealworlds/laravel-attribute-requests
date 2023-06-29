@@ -3,7 +3,6 @@
 namespace Ireal\AttributeRequests\Console\Commands;
 
 use Illuminate\Console\GeneratorCommand;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'make:request-mapper')]
