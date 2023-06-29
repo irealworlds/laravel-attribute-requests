@@ -1,4 +1,4 @@
-risky: false
+risky: true
 version: 8.2
 preset: none
 monolithic: true
