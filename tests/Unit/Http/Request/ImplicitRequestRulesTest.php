@@ -12,6 +12,7 @@ use Ireal\Tests\Fakes\Enums\Color;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Http\Request as BaseRequest;
+use Ireal\Tests\Fakes\NestedObject;
 
 it('should infer required or nullable from type', function () {
     // Arrange
@@ -212,6 +213,41 @@ it('should infer rules for class objects', function (): void {
     expect($rules['objectProperty2.imaginary'])
         ->toContain('numeric');
 });
+
+it('should infer rules for nested class objects up to the configured max depth', function (int $depth): void {
+    // Arrange
+    /** @var ConfigRepository $config */
+    $config = app()->make(ConfigRepository::class);
+    $config->set('requests.nested_validation_depth', $depth);
+    $baseRequest = new BaseRequest([
+        'object' => []
+    ]);
+    $validationFactory = app()->make(ValidationFactory::class);
+    $configRepository = app()->make(ConfigRepository::class);
+    $request = new class ($baseRequest, $validationFactory, $configRepository) extends Request {
+        public NestedObject $object;
+    };
+
+    // Act
+    $rules = $request->rules();
+
+    // Assert
+    expect($rules)
+        ->toHaveKey('object');
+    expect($rules['object'])
+        ->toEqual(['required', 'array']);
+
+    $field = 'object.child';
+    for ($i = 1; $i < $depth; ++$i) {
+        expect($rules)
+            ->toHaveKey($field);
+        expect($rules[$field])
+            ->toEqual(['nullable', 'array']);
+
+        $field .= '.child';
+    }
+
+})->with([1, 10, 20, 100]);
 
 it('should infer rules for backed enums', function (): void {
     // Arrange
