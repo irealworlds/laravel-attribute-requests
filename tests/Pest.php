@@ -12,7 +12,6 @@
 */
 
 use Illuminate\Http\Request as IlluminateRequest;
-use Illuminate\Support\Collection;
 use Ireal\AttributeRequests\Http\Request;
 use Ireal\Tests\TestCase;
 
@@ -44,8 +43,9 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function getRequestDependencies(array $data = []): array {
-    app()->bind(IlluminateRequest::class, fn() => new IlluminateRequest($data));
+function getRequestDependencies(array $data = []): array
+{
+    app()->bind(IlluminateRequest::class, fn () => new IlluminateRequest($data));
     $reflection = new ReflectionClass(Request::class);
     $constructor = $reflection->getConstructor();
     if (!$constructor) {

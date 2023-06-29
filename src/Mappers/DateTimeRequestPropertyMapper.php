@@ -14,6 +14,7 @@ readonly class DateTimeRequestPropertyMapper implements IRequestPropertyMapper
 {
     /**
      * @param ReflectionType|null $type
+     *
      * @inheritDoc
      */
     public function map(mixed $input, ReflectionType|null $type): DateTimeInterface

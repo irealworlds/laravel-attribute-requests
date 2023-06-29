@@ -12,6 +12,7 @@ readonly class StandardObjectRequestPropertyMapper implements IRequestPropertyMa
 {
     /**
      * @param ReflectionType|null $type
+     *
      * @inheritDoc
      */
     public function map(mixed $input, ReflectionType|null $type): object

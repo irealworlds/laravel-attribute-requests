@@ -24,17 +24,18 @@ readonly class RequestMappingService implements IRequestMappingService
     /**
      * RequestMappingService constructor method.
      *
-     * @param Container $_container
+     * @param Container            $_container
      * @param ITypeAnalysisService $_typeService
      */
     public function __construct(
-        private Container            $_container,
+        private Container $_container,
         private ITypeAnalysisService $_typeService
     ) {
     }
 
     /** @inheritDoc */
-    public function mapRequestValue(mixed $input, mixed $mapper, ReflectionType|null $type): mixed {
+    public function mapRequestValue(mixed $input, mixed $mapper, ReflectionType|null $type): mixed
+    {
         // If the mapper is a class string, instantiate it
         if (is_string($mapper)) {
             $mapper = $this->_container->make($mapper);
@@ -46,11 +47,13 @@ readonly class RequestMappingService implements IRequestMappingService
 
     /**
      * @inheritDoc
+     *
      * @throws ReflectionException
      */
     public function mapRequestValueForProperty(mixed $input, ReflectionProperty $property)
     {
         $mapper = $this->getMapperForProperty($property);
+
         return $this->mapRequestValue($input, $mapper, $property->getType());
     }
 
@@ -105,6 +108,7 @@ readonly class RequestMappingService implements IRequestMappingService
         if (!empty($attributes)) {
             /** @var RequestPropertyMapper $attribute */
             $attribute = $attributes[0]->newInstance();
+
             return $attribute->mapper;
         }
 
@@ -112,12 +116,14 @@ readonly class RequestMappingService implements IRequestMappingService
     }
 
     /** @inheritDoc */
-    public function getRequestNameForProperty(ReflectionProperty $property): string {
+    public function getRequestNameForProperty(ReflectionProperty $property): string
+    {
         $attributes = $property->getAttributes(RequestPropertyName::class);
 
         if (!empty($attributes)) {
             /** @var RequestPropertyName $attribute */
             $attribute = $attributes[0]->newInstance();
+
             return $attribute->name;
         }
 

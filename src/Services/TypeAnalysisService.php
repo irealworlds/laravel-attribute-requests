@@ -23,7 +23,7 @@ class TypeAnalysisService implements ITypeAnalysisService
     {
         return in_array($type->getName(), [
             'bool',
-            'boolean'
+            'boolean',
         ]);
     }
 
@@ -43,12 +43,13 @@ class TypeAnalysisService implements ITypeAnalysisService
         return in_array($type->getName(), [
             Collection::class,
             Enumerable::class,
-            ArrayAccess::class
+            ArrayAccess::class,
         ]);
     }
 
     /**
      * @inheritDoc
+     *
      * @throws ReflectionException
      */
     public function isDateType(ReflectionNamedType $type): bool
@@ -65,11 +66,13 @@ class TypeAnalysisService implements ITypeAnalysisService
 
         // If the type implements the DateTimeInterface, then this is a date
         $class = new ReflectionClass($type->getName());
+
         return $class->implementsInterface(DateTimeInterface::class);
     }
 
     /**
      * @inheritDoc
+     *
      * @throws ReflectionException
      */
     public function isBackedEnumType(ReflectionNamedType $type): bool
@@ -81,11 +84,13 @@ class TypeAnalysisService implements ITypeAnalysisService
 
         // If the type implements the BackedEnum, then this is an enum
         $class = new ReflectionClass($type->getName());
+
         return $class->implementsInterface(BackedEnum::class);
     }
 
     /**
      * @inheritDoc
+     *
      * @throws ReflectionException
      */
     public function isMappableObjectType(ReflectionNamedType $type): bool
@@ -116,6 +121,7 @@ class TypeAnalysisService implements ITypeAnalysisService
 
     /**
      * @inheritDoc
+     *
      * @throws ReflectionException
      */
     public function isFileType(ReflectionNamedType $type): bool
@@ -132,20 +138,23 @@ class TypeAnalysisService implements ITypeAnalysisService
 
         // If the type implements the SplFileInfo, then this is a file
         $class = new ReflectionClass($type->getName());
+
         return $class->isSubclassOf(SplFileInfo::class);
     }
 
     /**
      * @inheritDoc
      */
-    public function isIterableType(ReflectionNamedType $type): bool {
+    public function isIterableType(ReflectionNamedType $type): bool
+    {
         if ($type->isBuiltin()) {
             return in_array($type->getName(), [
                 'array',
-                'iterable'
+                'iterable',
             ]);
         } else {
             $class = new ReflectionClass($type->getName());
+
             return $class->isIterable();
         }
     }
@@ -153,11 +162,12 @@ class TypeAnalysisService implements ITypeAnalysisService
     /**
      * @inheritDoc
      */
-    public function isNumericType(ReflectionNamedType $type): bool {
+    public function isNumericType(ReflectionNamedType $type): bool
+    {
         return in_array($type->getName(), [
             'int',
             'float',
-            'real'
+            'real',
         ]);
     }
 }

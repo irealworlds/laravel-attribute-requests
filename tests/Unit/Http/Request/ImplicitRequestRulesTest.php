@@ -1,22 +1,23 @@
 <?php
+
 /** @noinspection PhpUnhandledExceptionInspection */
 /** @noinspection PhpUnused */
 
 use Carbon\Carbon;
+use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\Rules\Enum;
 use Ireal\AttributeRequests\Http\Request;
-use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Ireal\Tests\Fakes\{ComplexNumber, Enums\Color, NestedObject};
 
 it('should infer required or nullable from type', function () {
     // Arrange
     $data = [
         'requiredProperty' => 123,
-        'nullableProperty' => null
+        'nullableProperty' => null,
     ];
-    $request = new class (...getRequestDependencies($data)) extends Request {
+    $request = new class(...getRequestDependencies($data)) extends Request {
         public int $requiredProperty;
         public int|null $nullableProperty;
     };
@@ -38,7 +39,7 @@ it('should infer required or nullable from type', function () {
 
 it('should infer rules for scalar properties', function () {
     // Arrange
-    $request = new class (...getRequestDependencies()) extends Request {
+    $request = new class(...getRequestDependencies()) extends Request {
         public ?bool $booleanProperty;
 
         public ?string $stringProperty;
@@ -74,7 +75,7 @@ it('should infer rules for scalar properties', function () {
 
 it('should infer rules for file properties', function (): void {
     // Arrange
-    $request = new class (...getRequestDependencies()) extends Request {
+    $request = new class(...getRequestDependencies()) extends Request {
         public ?SplFileInfo $fileProperty1;
         public ?UploadedFile $fileProperty2;
     };
@@ -96,7 +97,7 @@ it('should infer rules for file properties', function (): void {
 
 it('should infer rules for date properties', function (): void {
     // Arrange
-    $request = new class (...getRequestDependencies()) extends Request {
+    $request = new class(...getRequestDependencies()) extends Request {
         public ?DateTimeInterface $dateProperty1;
         public ?DateTime $dateProperty2;
         public ?Carbon $dateProperty3;
@@ -126,7 +127,7 @@ it('should infer rules for date properties', function (): void {
 
 it('should infer rules for iterable properties', function (): void {
     // Arrange
-    $request = new class (...getRequestDependencies()) extends Request {
+    $request = new class(...getRequestDependencies()) extends Request {
         public ?array $iterableProperty1;
         public ?iterable $iterableProperty2;
         public ?Collection $iterableProperty3;
@@ -152,7 +153,7 @@ it('should infer rules for iterable properties', function (): void {
 
 it('should infer rules for standard objects', function (): void {
     // Arrange
-    $request = new class (...getRequestDependencies()) extends Request {
+    $request = new class(...getRequestDependencies()) extends Request {
         public ?object $objectProperty1;
     };
 
@@ -168,7 +169,7 @@ it('should infer rules for standard objects', function (): void {
 
 it('should infer rules for class objects', function (): void {
     // Arrange
-    $request = new class (...getRequestDependencies()) extends Request {
+    $request = new class(...getRequestDependencies()) extends Request {
         public ?ComplexNumber $objectProperty2;
     };
 
@@ -196,9 +197,9 @@ it('should infer rules for nested class objects up to the configured max depth',
     $config = app()->make(ConfigRepository::class);
     $config->set('requests.nested_validation_depth', $depth);
     $data = [
-        'object' => []
+        'object' => [],
     ];
-    $request = new class (...getRequestDependencies($data)) extends Request {
+    $request = new class(...getRequestDependencies($data)) extends Request {
         public NestedObject $object;
     };
 
@@ -212,7 +213,7 @@ it('should infer rules for nested class objects up to the configured max depth',
         ->toEqual(['required', 'array']);
 
     $field = 'object.child';
-    for ($i = 1; $i < $depth; ++$i) {
+    for ($i = 1; $i < $depth; $i++) {
         expect($rules)
             ->toHaveKey($field);
         expect($rules[$field])
@@ -220,12 +221,11 @@ it('should infer rules for nested class objects up to the configured max depth',
 
         $field .= '.child';
     }
-
 })->with([1, 10, 20, 100]);
 
 it('should infer rules for backed enums', function (): void {
     // Arrange
-    $request = new class (...getRequestDependencies()) extends Request {
+    $request = new class(...getRequestDependencies()) extends Request {
         public ?Color $backedEnumProperty1;
     };
 
@@ -236,8 +236,8 @@ it('should infer rules for backed enums', function (): void {
     expect($rules)
         ->toHaveKey('backedEnumProperty1')
         ->and((new Collection($rules['backedEnumProperty1']))
-            ->some(fn(mixed $rule): bool =>
-                $rule instanceof Enum &&
+            ->some(
+                fn (mixed $rule): bool => $rule instanceof Enum &&
                 serialize($rule) === serialize(new Enum(Color::class))
             ))
         ->toBeTrue()
@@ -247,7 +247,7 @@ it('should infer rules for backed enums', function (): void {
 
 it('should not infer rules from untyped properties', function (): void {
     // Arrange
-    $request = new class (...getRequestDependencies()) extends Request {
+    $request = new class(...getRequestDependencies()) extends Request {
         public $untypedProperty;
     };
 

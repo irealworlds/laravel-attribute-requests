@@ -14,7 +14,7 @@ class AttributeRequestServiceProvider extends ServiceProvider
      * @var array
      */
     public array $bindings = [
-        ITypeAnalysisService::class => TypeAnalysisService::class,
+        ITypeAnalysisService::class   => TypeAnalysisService::class,
         IRequestMappingService::class => RequestMappingService::class,
     ];
 
@@ -23,15 +23,16 @@ class AttributeRequestServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot(): void {
+    public function boot(): void
+    {
         // Publish configuration
         $this->publishes([
-            __DIR__ . '/../../config/requests.php' => $this->app->configPath('requests.php'),
+            __DIR__.'/../../config/requests.php' => $this->app->configPath('requests.php'),
         ]);
 
         // Merge configuration
         $this->mergeConfigFrom(
-            __DIR__ . '/../../config/requests.php',
+            __DIR__.'/../../config/requests.php',
             'requests'
         );
     }

@@ -1,4 +1,5 @@
 <?php
+
 /** @noinspection PhpUnhandledExceptionInspection */
 /** @noinspection PhpUnused */
 /** @noinspection PhpMissingFieldTypeInspection */
@@ -8,15 +9,16 @@ use Illuminate\Support\{Collection, Enumerable};
 use Ireal\AttributeRequests\Attributes\RequestPropertyMapper;
 use Ireal\AttributeRequests\Attributes\RequestPropertyName;
 use Ireal\AttributeRequests\Http\Request;
-use Ireal\Tests\Fakes\{ComplexNumber, Enums\Color, Enums\DayOfTheWeek, NestedObject};
 use Ireal\AttributeRequests\Mappers\CarbonRequestPropertyMapper;
+use Ireal\Tests\Fakes\{ComplexNumber, Enums\Color, Enums\DayOfTheWeek, NestedObject};
+
 use function Pest\Faker\fake;
 
 it('should map null to nullable values', function (array $data): void {
     // Arrange
 
     // Act
-    $request = new class (...getRequestDependencies($data)) extends Request {
+    $request = new class(...getRequestDependencies($data)) extends Request {
         public int|null $nullProperty;
     };
 
@@ -25,7 +27,7 @@ it('should map null to nullable values', function (array $data): void {
         ->toBeNull();
 })->with([
     'explicitly null' => [['nullProperty' => null]],
-    'not present' => [[]]
+    'not present'     => [[]],
 ]);
 
 it('should map scalar types', function (): void {
@@ -45,12 +47,12 @@ it('should map scalar types', function (): void {
         'booleanProperty2' => false,
         'booleanProperty3' => 1,
         'booleanProperty4' => 0,
-        'booleanProperty5' => "1",
-        'booleanProperty6' => "0",
+        'booleanProperty5' => '1',
+        'booleanProperty6' => '0',
     ];
 
     // Act
-    $request = new class (...getRequestDependencies($data)) extends Request {
+    $request = new class(...getRequestDependencies($data)) extends Request {
         public int $intProperty1;
         public int $intProperty2;
 
@@ -113,7 +115,7 @@ it('should map iterable types', function (): void {
     ];
 
     // Act
-    $request = new class (...getRequestDependencies($data)) extends Request {
+    $request = new class(...getRequestDependencies($data)) extends Request {
         public Collection $collectionProperty1;
         public Enumerable $collectionProperty2;
         public ArrayAccess $collectionProperty3;
@@ -152,7 +154,7 @@ it('should map date types', function (): void {
     ];
 
     // Act
-    $request = new class (...getRequestDependencies($data)) extends Request {
+    $request = new class(...getRequestDependencies($data)) extends Request {
         public Carbon $dateProperty1;
         public DateTimeInterface $dateProperty2;
         public DateTime $dateProperty3;
@@ -182,11 +184,11 @@ it('should map backed enum types', function (): void {
     // Arrange
     $data = [
         'stringBackedEnum' => $this->faker->randomElement(Color::cases())->value,
-        'intBackedEnum' => $this->faker->randomElement(DayOfTheWeek::cases())->value,
+        'intBackedEnum'    => $this->faker->randomElement(DayOfTheWeek::cases())->value,
     ];
 
     // Act
-    $request = new class (...getRequestDependencies($data)) extends Request {
+    $request = new class(...getRequestDependencies($data)) extends Request {
         public Color $stringBackedEnum;
         public DayOfTheWeek $intBackedEnum;
     };
@@ -203,12 +205,12 @@ it('should map standard objects', function (): void {
     $data = [
         'simpleObjectProperty' => [
             'a' => 'b',
-            'c' => 'd'
-        ]
+            'c' => 'd',
+        ],
     ];
 
     // Act
-    $request = new class (...getRequestDependencies($data)) extends Request {
+    $request = new class(...getRequestDependencies($data)) extends Request {
         public object $simpleObjectProperty;
     };
 
@@ -226,11 +228,11 @@ it('should map class defined object', function (): void {
         'complexNumber' => json_decode(
             json_encode($object),
             true
-        )
+        ),
     ];
 
     // Act
-    $request = new class (...getRequestDependencies($data)) extends Request {
+    $request = new class(...getRequestDependencies($data)) extends Request {
         public ComplexNumber $complexNumber;
     };
 
@@ -249,11 +251,11 @@ it('should map nested objects', function (): void {
         'object' => json_decode(
             json_encode($object),
             true
-        )
+        ),
     ];
 
     // Act
-    $request = new class (...getRequestDependencies($data)) extends Request {
+    $request = new class(...getRequestDependencies($data)) extends Request {
         public NestedObject $object;
     };
 
@@ -265,11 +267,11 @@ it('should map nested objects', function (): void {
 it('should map to untyped properties', function ($object): void {
     // Arrange
     $data = [
-        'object' => $object
+        'object' => $object,
     ];
 
     // Act
-    $request = new class (...getRequestDependencies($data)) extends Request {
+    $request = new class(...getRequestDependencies($data)) extends Request {
         public $object;
     };
 
@@ -277,30 +279,30 @@ it('should map to untyped properties', function ($object): void {
     expect($request->object)
         ->toEqual($object);
 })->with([
-    'int' => [fake()->randomNumber()],
-    'float' => [fake()->randomFloat()],
-    'string' => [fake()->text()],
-    'array' => [fake()->words()],
+    'int'              => [fake()->randomNumber()],
+    'float'            => [fake()->randomFloat()],
+    'string'           => [fake()->text()],
+    'array'            => [fake()->words()],
     'anonymous object' => [
         (object) [
             'a' => fake()->text(),
-            'b' => fake()->text()
-        ]
+            'b' => fake()->text(),
+        ],
     ],
     'complex object' => [
-        new ComplexNumber()
-    ]
+        new ComplexNumber(),
+    ],
 ]);
 
 it('should apply explicit mapping', function (): void {
     // Arrange
     $date = Carbon::parse(fake()->dateTime());
     $data = [
-        'createdAt' => $date->toIso8601String()
+        'createdAt' => $date->toIso8601String(),
     ];
 
     // Act
-    $request = new class (...getRequestDependencies($data)) extends Request {
+    $request = new class(...getRequestDependencies($data)) extends Request {
         #[RequestPropertyMapper(CarbonRequestPropertyMapper::class)]
         public $createdAt;
     };
@@ -315,11 +317,11 @@ it('should apply mapping using the configured name', function (): void {
     // Arrange
     $date = Carbon::parse(fake()->dateTime());
     $data = [
-        'created_at' => $date->toIso8601String()
+        'created_at' => $date->toIso8601String(),
     ];
 
     // Act
-    $request = new class (...getRequestDependencies($data)) extends Request {
+    $request = new class(...getRequestDependencies($data)) extends Request {
         #[RequestPropertyName('created_at')]
         public Carbon $createdAt;
     };

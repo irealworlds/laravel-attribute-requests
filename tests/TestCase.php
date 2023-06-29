@@ -33,7 +33,7 @@ abstract class TestCase extends OrchestraTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->app->setBasePath(__DIR__ . '/../');
+        $this->app->setBasePath(__DIR__.'/../');
         $this->setUpFaker();
         $this->props = new Collection();
     }

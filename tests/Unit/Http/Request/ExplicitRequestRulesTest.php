@@ -1,4 +1,5 @@
 <?php
+
 /** @noinspection PhpUnhandledExceptionInspection */
 /** @noinspection PhpUnused */
 
@@ -11,17 +12,16 @@ it('should add rules from validation attributes', function (): void {
     // Arrange
     $data = [
         'stringBackedEnum' => $this->faker->randomElement(Color::cases())->value,
-        'intBackedEnum' => $this->faker->randomElement(DayOfTheWeek::cases())->value,
+        'intBackedEnum'    => $this->faker->randomElement(DayOfTheWeek::cases())->value,
     ];
 
-    $request = new class (...getRequestDependencies($data)) extends Request {
+    $request = new class(...getRequestDependencies($data)) extends Request {
         #[ValidateRule(new In([1, 2, 3, 4]))]
         public mixed $property1;
 
         #[ValidateRule('min:0')]
         #[ValidateRule('required')]
         public mixed $property2;
-
 
         /** @inheritDoc */
         public function validateResolved()
