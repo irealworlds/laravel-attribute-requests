@@ -1,0 +1,71 @@
+risky: false
+version: 8.2
+preset: none
+monolithic: true
+enabled:
+  - align_comments
+  - alpha_ordered_imports
+  - alpha_ordered_traits
+  - array_push
+  - assign_null_coalescing_to_coalesce_equal
+  - backtick_to_shell_exec
+  - blank_line_after_namespace
+  - blank_line_after_opening_tag
+  - cast_spaces
+  - const_visibility_required
+  - dir_constant
+  - group_import
+  - implode_call
+  - is_null
+  - logical_operators
+  - lowercase_cast
+  - lowercase_constants
+  - lowercase_keywords
+  - lowercase_static_reference
+  - mb_str_functions
+  - method_separation
+  - modernize_strpos
+  - modernize_types_casting
+  - native_function_casing
+  - no_closing_tag
+  - no_blank_lines_between_imports
+  - no_blank_lines_between_traits
+  - no_break_comment
+  - no_homoglyph_names
+  - no_leading_import_slash
+  - no_homoglyph_names
+  - no_unused_imports
+  - no_unused_lambda_imports
+  - no_useless_concat_operator
+  - php_unit_construct
+  - php_unit_dedicate_assert
+  - php_unit_expectation
+  - php_unit_mock
+  - php_unit_mock_short_will_return
+  - php_unit_namespaced
+  - php_unit_no_expectation_annotation
+  - php_unit_strict
+  - php_unit_test_class_requires_covers
+  - phpdoc_types_null_last
+  - pow_to_exponentiation
+  - pre_increment
+  - property_visibility_required
+  - random_api_migration
+  - short_scalar_cast
+  - simplified_if_return
+  - standardize_not_equals
+  - strict_comparison
+  - ternary_to_null_coalescing
+finder:
+  exclude:
+    - "modules"
+    - "node_modules"
+    - "nova"
+    - "nova-components"
+    - "storage"
+    - "spark"
+    - "vendor"
+  name: "*.php"
+  not-name:
+    - "*.blade.php"
+    - "_ide_helper.php"
