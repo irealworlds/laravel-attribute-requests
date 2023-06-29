@@ -4,6 +4,7 @@ namespace Ireal\AttributeRequests\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Ireal\AttributeRequests\Console\Commands\RequestMakeCommand;
+use Ireal\AttributeRequests\Console\Commands\RequestMapperMakeCommand;
 use Ireal\AttributeRequests\Contracts\{IRequestMappingService, ITypeAnalysisService};
 use Ireal\AttributeRequests\Services\{RequestMappingService, TypeAnalysisService};
 
@@ -39,7 +40,8 @@ class AttributeRequestServiceProvider extends ServiceProvider
         // Register commands
         if ($this->app->runningInConsole()) {
             $this->commands([
-                RequestMakeCommand::class
+                RequestMakeCommand::class,
+                RequestMapperMakeCommand::class,
             ]);
         }
     }
