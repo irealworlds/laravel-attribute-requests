@@ -290,3 +290,22 @@ it('should map to untyped properties', function ($object): void {
         new ComplexNumber()
     ]
 ]);
+
+it('should apply explicit mapping', function (): void {
+    // Arrange
+    $date = Carbon::parse(fake()->dateTime());
+    $data = [
+        'createdAt' => $date->toIso8601String()
+    ];
+
+    // Act
+    $request = new class (...getRequestDependencies($data)) extends Request {
+        #[RequestPropertyMapper(CarbonRequestPropertyMapper::class)]
+        public $createdAt;
+    };
+
+    // Assert
+    expect($request->createdAt)
+        ->toBeInstanceOf(Carbon::class)
+        ->toEqual($date);
+});
