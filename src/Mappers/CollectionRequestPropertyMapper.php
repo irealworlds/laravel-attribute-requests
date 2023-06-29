@@ -5,7 +5,7 @@ namespace Ireal\AttributeRequests\Mappers;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Ireal\AttributeRequests\Contracts\IRequestPropertyMapper;
-use ReflectionNamedType;
+use ReflectionType;
 
 /**
  * @implements IRequestPropertyMapper<Collection>
@@ -13,10 +13,10 @@ use ReflectionNamedType;
 readonly class CollectionRequestPropertyMapper implements IRequestPropertyMapper
 {
     /**
-     * @param ReflectionNamedType $type
+     * @param ReflectionType $type
      * @inheritDoc
      */
-    public function map(mixed $input, ReflectionNamedType $type): Collection
+    public function map(mixed $input, ReflectionType $type): Collection
     {
         return new Collection($input);
     }

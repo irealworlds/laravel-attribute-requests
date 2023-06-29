@@ -3,7 +3,7 @@
 namespace Ireal\AttributeRequests\Mappers;
 
 use Ireal\AttributeRequests\Contracts\IRequestPropertyMapper;
-use ReflectionNamedType;
+use ReflectionType;
 
 /**
  * @implements IRequestPropertyMapper<bool>
@@ -13,7 +13,7 @@ readonly class BooleanRequestPropertyMapper implements IRequestPropertyMapper
     /**
      * @inheritDoc
      */
-    public function map(mixed $input, ReflectionNamedType $type): bool
+    public function map(mixed $input, ReflectionType $type): bool
     {
         if (is_string($input)) {
             if ($input === '0') {

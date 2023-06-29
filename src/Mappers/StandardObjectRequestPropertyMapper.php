@@ -3,7 +3,7 @@
 namespace Ireal\AttributeRequests\Mappers;
 
 use Ireal\AttributeRequests\Contracts\IRequestPropertyMapper;
-use ReflectionNamedType;
+use ReflectionType;
 
 /**
  * @implements IRequestPropertyMapper<object>
@@ -11,10 +11,10 @@ use ReflectionNamedType;
 readonly class StandardObjectRequestPropertyMapper implements IRequestPropertyMapper
 {
     /**
-     * @param ReflectionNamedType $type
+     * @param ReflectionType $type
      * @inheritDoc
      */
-    public function map(mixed $input, ReflectionNamedType $type): object
+    public function map(mixed $input, ReflectionType $type): object
     {
         return (object) $input;
     }

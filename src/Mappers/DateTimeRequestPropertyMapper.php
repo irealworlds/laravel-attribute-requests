@@ -5,7 +5,7 @@ namespace Ireal\AttributeRequests\Mappers;
 use Carbon\Carbon;
 use DateTimeInterface;
 use Ireal\AttributeRequests\Contracts\IRequestPropertyMapper;
-use ReflectionNamedType;
+use ReflectionType;
 
 /**
  * @implements IRequestPropertyMapper<DateTimeInterface>
@@ -13,10 +13,10 @@ use ReflectionNamedType;
 readonly class DateTimeRequestPropertyMapper implements IRequestPropertyMapper
 {
     /**
-     * @param ReflectionNamedType $type
+     * @param ReflectionType $type
      * @inheritDoc
      */
-    public function map(mixed $input, ReflectionNamedType $type): DateTimeInterface
+    public function map(mixed $input, ReflectionType $type): DateTimeInterface
     {
         return Carbon::parse($input)->toDateTime();
     }

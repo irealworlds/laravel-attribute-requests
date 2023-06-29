@@ -59,9 +59,7 @@ class Request extends BaseRequest implements ValidatesWhenResolved
                 $value = $request->get($name) ?? $request->file($name);
 
                 // Cast the value to the correct type
-                if ($property->hasType()) {
-                    $value = $this->_mappingService->mapRequestValueForProperty($value, $property);
-                }
+                $value = $this->_mappingService->mapRequestValueForProperty($value, $property);
 
                 $this->{$name} = $value;
                 if (is_scalar($value)) {

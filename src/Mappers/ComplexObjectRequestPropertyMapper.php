@@ -3,8 +3,12 @@
 namespace Ireal\AttributeRequests\Mappers;
 
 use Illuminate\Contracts\Container\BindingResolutionException;
+use InvalidArgumentException;
 use Ireal\AttributeRequests\Contracts\IRequestMappingService;
 use Ireal\AttributeRequests\Contracts\IRequestPropertyMapper;
+use ReflectionException;
+use ReflectionNamedType;
+use ReflectionType;
 use ReflectionClass;
 use ReflectionProperty;
 
@@ -25,11 +29,15 @@ readonly class ComplexObjectRequestPropertyMapper implements IRequestPropertyMap
 
     /**
      * @inheritDoc
-     * @throws \ReflectionException
+     * @throws ReflectionException
      * @throws BindingResolutionException
      */
-    public function map(mixed $input, \ReflectionNamedType $type): object
+    public function map(mixed $input, ReflectionType $type): object
     {
+        if (!($type instanceof ReflectionNamedType)) {
+            throw new InvalidArgumentException("The given property does not have a named type.");
+        }
+
         $class = new ReflectionClass($type->getName());
         $instance = $class->newInstance();
         $input = (array)$input;

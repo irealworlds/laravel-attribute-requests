@@ -4,7 +4,7 @@ namespace Ireal\AttributeRequests\Mappers;
 
 use Carbon\Carbon;
 use Ireal\AttributeRequests\Contracts\IRequestPropertyMapper;
-use ReflectionNamedType;
+use ReflectionType;
 
 /**
  * @implements IRequestPropertyMapper<Carbon>
@@ -12,10 +12,10 @@ use ReflectionNamedType;
 readonly class CarbonRequestPropertyMapper implements IRequestPropertyMapper
 {
     /**
-     * @param ReflectionNamedType $type
+     * @param ReflectionType $type
      * @inheritDoc
      */
-    public function map(mixed $input, ReflectionNamedType $type): Carbon
+    public function map(mixed $input, ReflectionType $type): Carbon
     {
         return Carbon::parse($input);
     }

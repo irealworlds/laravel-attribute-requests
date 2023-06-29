@@ -3,6 +3,7 @@
 namespace Ireal\AttributeRequests\Services;
 
 use Illuminate\Contracts\Container\Container;
+use Ireal\AttributeRequests\Attributes\RequestPropertyMapper;
 use Ireal\AttributeRequests\Contracts\{IRequestMappingService, ITypeAnalysisService};
 use Ireal\AttributeRequests\Mappers\{BackedEnumRequestPropertyMapper,
     BooleanRequestPropertyMapper,
@@ -15,6 +16,7 @@ use Ireal\AttributeRequests\Mappers\{BackedEnumRequestPropertyMapper,
 use ReflectionException;
 use ReflectionNamedType;
 use ReflectionProperty;
+use ReflectionType;
 
 readonly class RequestMappingService implements IRequestMappingService
 {
@@ -31,7 +33,7 @@ readonly class RequestMappingService implements IRequestMappingService
     }
 
     /** @inheritDoc */
-    public function mapRequestValue(mixed $input, mixed $mapper, ReflectionNamedType $type): mixed {
+    public function mapRequestValue(mixed $input, mixed $mapper, ReflectionType $type): mixed {
         // If the mapper is a class string, instantiate it
         if (is_string($mapper)) {
             $mapper = $this->_container->make($mapper);
@@ -52,39 +54,41 @@ readonly class RequestMappingService implements IRequestMappingService
     }
 
     /** @inheritDoc */
-    public function getMapperForType(ReflectionNamedType $type): string
+    public function getMapperForType(ReflectionType $type): string
     {
-        // Mapper for boolean properties
-        if ($this->_typeService->isBooleanType($type)) {
-            return BooleanRequestPropertyMapper::class;
-        }
+        if ($type instanceof ReflectionNamedType) {
+            // Mapper for boolean properties
+            if ($this->_typeService->isBooleanType($type)) {
+                return BooleanRequestPropertyMapper::class;
+            }
 
-        // Mapper for Carbon properties
-        if ($this->_typeService->isCarbonType($type)) {
-            return CarbonRequestPropertyMapper::class;
-        }
+            // Mapper for Carbon properties
+            if ($this->_typeService->isCarbonType($type)) {
+                return CarbonRequestPropertyMapper::class;
+            }
 
-        // Mapper for collection properties
-        if ($this->_typeService->isCollectionType($type)) {
-            return CollectionRequestPropertyMapper::class;
-        }
+            // Mapper for collection properties
+            if ($this->_typeService->isCollectionType($type)) {
+                return CollectionRequestPropertyMapper::class;
+            }
 
-        // Map DateTime objects
-        if ($this->_typeService->isDateType($type)) {
-            return DateTimeRequestPropertyMapper::class;
-        }
+            // Map DateTime objects
+            if ($this->_typeService->isDateType($type)) {
+                return DateTimeRequestPropertyMapper::class;
+            }
 
-        // Map backed enums
-        if ($this->_typeService->isBackedEnumType($type)) {
-            return BackedEnumRequestPropertyMapper::class;
-        }
+            // Map backed enums
+            if ($this->_typeService->isBackedEnumType($type)) {
+                return BackedEnumRequestPropertyMapper::class;
+            }
 
-        // Map objects
-        if ($this->_typeService->isMappableObjectType($type)) {
-            if ($type->isBuiltin()) {
-                return StandardObjectRequestPropertyMapper::class;
-            } else {
-                return ComplexObjectRequestPropertyMapper::class;
+            // Map objects
+            if ($this->_typeService->isMappableObjectType($type)) {
+                if ($type->isBuiltin()) {
+                    return StandardObjectRequestPropertyMapper::class;
+                } else {
+                    return ComplexObjectRequestPropertyMapper::class;
+                }
             }
         }
 
@@ -95,6 +99,14 @@ readonly class RequestMappingService implements IRequestMappingService
     /** @inheritDoc */
     public function getMapperForProperty(ReflectionProperty $property): string
     {
+        $attributes = $property->getAttributes(RequestPropertyMapper::class);
+
+        if (!empty($attributes)) {
+            /** @var RequestPropertyMapper $attribute */
+            $attribute = $attributes[0]->newInstance();
+            return $attribute->mapper;
+        }
+
         return $this->getMapperForType($property->getType());
     }
 }

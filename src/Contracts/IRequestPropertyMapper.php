@@ -3,7 +3,7 @@
 namespace Ireal\AttributeRequests\Contracts;
 
 use InvalidArgumentException;
-use ReflectionNamedType;
+use ReflectionType;
 
 /**
  * The contract that has to be implemented for all request property mappers.
@@ -16,9 +16,9 @@ interface IRequestPropertyMapper
      * Map the received request input to the requested output type.
      *
      * @param mixed|null $input
-     * @param ReflectionNamedType $type
+     * @param ReflectionType $type
      * @return TOutput
      * @throws InvalidArgumentException
      */
-    public function map(mixed $input, ReflectionNamedType $type): mixed;
+    public function map(mixed $input, ReflectionType $type): mixed;
 }
