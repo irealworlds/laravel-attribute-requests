@@ -6,6 +6,7 @@
 use Carbon\Carbon;
 use Illuminate\Support\{Collection, Enumerable};
 use Ireal\AttributeRequests\Attributes\RequestPropertyMapper;
+use Ireal\AttributeRequests\Attributes\RequestPropertyName;
 use Ireal\AttributeRequests\Http\Request;
 use Ireal\Tests\Fakes\{ComplexNumber, Enums\Color, Enums\DayOfTheWeek, NestedObject};
 use Ireal\AttributeRequests\Mappers\CarbonRequestPropertyMapper;
@@ -302,6 +303,25 @@ it('should apply explicit mapping', function (): void {
     $request = new class (...getRequestDependencies($data)) extends Request {
         #[RequestPropertyMapper(CarbonRequestPropertyMapper::class)]
         public $createdAt;
+    };
+
+    // Assert
+    expect($request->createdAt)
+        ->toBeInstanceOf(Carbon::class)
+        ->toEqual($date);
+});
+
+it('should apply mapping using the configured name', function (): void {
+    // Arrange
+    $date = Carbon::parse(fake()->dateTime());
+    $data = [
+        'created_at' => $date->toIso8601String()
+    ];
+
+    // Act
+    $request = new class (...getRequestDependencies($data)) extends Request {
+        #[RequestPropertyName('created_at')]
+        public Carbon $createdAt;
     };
 
     // Assert
