@@ -1,0 +1,20 @@
+<?php
+
+namespace {{ namespace }};
+
+use Ireal\AttributeRequests\Contracts\IRequestPropertyMapper;
+use ReflectionType;
+
+/**
+ * @implements IRequestPropertyMapper<mixed>
+ */
+readonly class {{ class }} implements IRequestPropertyMapper
+{
+    /**
+     * @inheritDoc
+     */
+    public function map(mixed $input, ReflectionType|null $type): mixed
+    {
+        return $input;
+    }
+}
