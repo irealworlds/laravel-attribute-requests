@@ -3,8 +3,7 @@
 namespace Ireal\AttributeRequests\Services;
 
 use Illuminate\Contracts\Container\Container;
-use Ireal\AttributeRequests\Attributes\RequestPropertyMapper;
-use Ireal\AttributeRequests\Attributes\RequestPropertyName;
+use Ireal\AttributeRequests\Attributes\{RequestPropertyMapper, RequestPropertyName};
 use Ireal\AttributeRequests\Contracts\{IRequestMappingService, ITypeAnalysisService};
 use Ireal\AttributeRequests\Mappers\{BackedEnumRequestPropertyMapper,
     BooleanRequestPropertyMapper,

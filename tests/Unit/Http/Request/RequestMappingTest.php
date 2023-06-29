@@ -1,15 +1,15 @@
 <?php
+
 /** @noinspection PhpUnhandledExceptionInspection */
 /** @noinspection PhpUnused */
 /** @noinspection PhpMissingFieldTypeInspection */
 
 use Carbon\Carbon;
 use Illuminate\Support\{Collection, Enumerable};
-use Ireal\AttributeRequests\Attributes\RequestPropertyMapper;
-use Ireal\AttributeRequests\Attributes\RequestPropertyName;
+use Ireal\AttributeRequests\Attributes\{RequestPropertyMapper, RequestPropertyName};
 use Ireal\AttributeRequests\Http\Request;
-use Ireal\Tests\Fakes\{ComplexNumber, Enums\Color, Enums\DayOfTheWeek, NestedObject};
 use Ireal\AttributeRequests\Mappers\CarbonRequestPropertyMapper;
+use Ireal\Tests\Fakes\{ComplexNumber, Enums\Color, Enums\DayOfTheWeek, NestedObject};
 use function Pest\Faker\fake;
 
 it('should map null to nullable values', function (array $data): void {

@@ -2,7 +2,6 @@
 
 namespace Ireal\Tests\Fakes\Enums;
 
-
 /**
  * A dummy string-backed enum that should be used for tests.
  *

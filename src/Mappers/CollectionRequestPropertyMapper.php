@@ -2,7 +2,6 @@
 
 namespace Ireal\AttributeRequests\Mappers;
 
-use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Ireal\AttributeRequests\Contracts\IRequestPropertyMapper;
 use ReflectionType;

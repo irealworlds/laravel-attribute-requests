@@ -6,8 +6,7 @@ use ArrayAccess;
 use BackedEnum;
 use Carbon\Carbon;
 use DateTimeInterface;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Enumerable;
+use Illuminate\Support\{Collection, Enumerable};
 use Ireal\AttributeRequests\Contracts\ITypeAnalysisService;
 use ReflectionClass;
 use ReflectionException;
@@ -106,11 +105,7 @@ class TypeAnalysisService implements ITypeAnalysisService
             }
 
             // If this class' constructor has required parameters, it cannot be mapped
-            if ($class->getConstructor()?->getNumberOfRequiredParameters()) {
-                return false;
-            }
-
-            return true;
+            return ! ($class->getConstructor()?->getNumberOfRequiredParameters());
         }
     }
 
@@ -137,6 +132,7 @@ class TypeAnalysisService implements ITypeAnalysisService
 
     /**
      * @inheritDoc
+     * @throws ReflectionException
      */
     public function isIterableType(ReflectionNamedType $type): bool {
         if ($type->isBuiltin()) {
