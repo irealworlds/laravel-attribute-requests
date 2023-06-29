@@ -6,6 +6,11 @@
             "Ireal\\AttributeRequests\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Ireal\\Tests\\": "tests/"
+        }
+    },
     "extra": {
         "laravel": {
             "providers": [
@@ -20,8 +25,19 @@
         }
     ],
     "require": {
-        "illuminate/support": "^10.0",
-        "illuminate/http": "^10.14",
-        "illuminate/validation": "^10.14"
+        "illuminate/support": "^10",
+        "illuminate/http": "^10",
+        "illuminate/validation": "^10",
+        "illuminate/contracts": "^10"
+    },
+    "require-dev": {
+        "pestphp/pest": "^2.8",
+        "mockery/mockery": "^1.6",
+        "orchestra/testbench": "^8.5"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     }
 }
