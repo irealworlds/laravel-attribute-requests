@@ -13,10 +13,10 @@ use ReflectionType;
 readonly class DateTimeRequestPropertyMapper implements IRequestPropertyMapper
 {
     /**
-     * @param ReflectionType $type
+     * @param ReflectionType|null $type
      * @inheritDoc
      */
-    public function map(mixed $input, ReflectionType $type): DateTimeInterface
+    public function map(mixed $input, ReflectionType|null $type): DateTimeInterface
     {
         return Carbon::parse($input)->toDateTime();
     }

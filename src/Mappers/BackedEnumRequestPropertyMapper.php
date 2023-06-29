@@ -17,7 +17,7 @@ readonly class BackedEnumRequestPropertyMapper implements IRequestPropertyMapper
     /**
      * @inheritDoc
      */
-    public function map(mixed $input, ReflectionType $type): BackedEnum
+    public function map(mixed $input, ReflectionType|null $type): BackedEnum
     {
         if ($type instanceof ReflectionNamedType) {
             /** @var BackedEnum $class */

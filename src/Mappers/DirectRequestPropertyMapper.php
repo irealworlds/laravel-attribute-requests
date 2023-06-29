@@ -11,10 +11,10 @@ use ReflectionType;
 readonly class DirectRequestPropertyMapper implements IRequestPropertyMapper
 {
     /**
-     * @param ReflectionType $type
+     * @param ReflectionType|null $type
      * @inheritDoc
      */
-    public function map(mixed $input, ReflectionType $type): mixed
+    public function map(mixed $input, ReflectionType|null $type): mixed
     {
         return $input;
     }

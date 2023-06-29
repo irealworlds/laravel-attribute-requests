@@ -16,9 +16,9 @@ interface IRequestPropertyMapper
      * Map the received request input to the requested output type.
      *
      * @param mixed|null $input
-     * @param ReflectionType $type
+     * @param ReflectionType|null $type
      * @return TOutput
      * @throws InvalidArgumentException
      */
-    public function map(mixed $input, ReflectionType $type): mixed;
+    public function map(mixed $input, ReflectionType|null $type): mixed;
 }

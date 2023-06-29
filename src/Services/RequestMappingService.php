@@ -33,7 +33,7 @@ readonly class RequestMappingService implements IRequestMappingService
     }
 
     /** @inheritDoc */
-    public function mapRequestValue(mixed $input, mixed $mapper, ReflectionType $type): mixed {
+    public function mapRequestValue(mixed $input, mixed $mapper, ReflectionType|null $type): mixed {
         // If the mapper is a class string, instantiate it
         if (is_string($mapper)) {
             $mapper = $this->_container->make($mapper);
@@ -54,7 +54,7 @@ readonly class RequestMappingService implements IRequestMappingService
     }
 
     /** @inheritDoc */
-    public function getMapperForType(ReflectionType $type): string
+    public function getMapperForType(ReflectionType|null $type): string
     {
         if ($type instanceof ReflectionNamedType) {
             // Mapper for boolean properties

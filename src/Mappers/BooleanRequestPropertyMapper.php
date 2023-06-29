@@ -13,7 +13,7 @@ readonly class BooleanRequestPropertyMapper implements IRequestPropertyMapper
     /**
      * @inheritDoc
      */
-    public function map(mixed $input, ReflectionType $type): bool
+    public function map(mixed $input, ReflectionType|null $type): bool
     {
         if (is_string($input)) {
             if ($input === '0') {

@@ -1,11 +1,14 @@
 <?php
 /** @noinspection PhpUnhandledExceptionInspection */
 /** @noinspection PhpUnused */
+/** @noinspection PhpMissingFieldTypeInspection */
 
 use Carbon\Carbon;
 use Illuminate\Support\{Collection, Enumerable};
+use Ireal\AttributeRequests\Attributes\RequestPropertyMapper;
 use Ireal\AttributeRequests\Http\Request;
 use Ireal\Tests\Fakes\{ComplexNumber, Enums\Color, Enums\DayOfTheWeek, NestedObject};
+use Ireal\AttributeRequests\Mappers\CarbonRequestPropertyMapper;
 use function Pest\Faker\fake;
 
 it('should map null to nullable values', function (array $data): void {
@@ -257,3 +260,33 @@ it('should map nested objects', function (): void {
     expect($request->object)
         ->toEqualCanonicalizing($object);
 });
+
+it('should map to untyped properties', function ($object): void {
+    // Arrange
+    $data = [
+        'object' => $object
+    ];
+
+    // Act
+    $request = new class (...getRequestDependencies($data)) extends Request {
+        public $object;
+    };
+
+    // Assert
+    expect($request->object)
+        ->toEqual($object);
+})->with([
+    'int' => [fake()->randomNumber()],
+    'float' => [fake()->randomFloat()],
+    'string' => [fake()->text()],
+    'array' => [fake()->words()],
+    'anonymous object' => [
+        (object) [
+            'a' => fake()->text(),
+            'b' => fake()->text()
+        ]
+    ],
+    'complex object' => [
+        new ComplexNumber()
+    ]
+]);

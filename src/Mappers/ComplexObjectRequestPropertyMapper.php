@@ -32,7 +32,7 @@ readonly class ComplexObjectRequestPropertyMapper implements IRequestPropertyMap
      * @throws ReflectionException
      * @throws BindingResolutionException
      */
-    public function map(mixed $input, ReflectionType $type): object
+    public function map(mixed $input, ReflectionType|null $type): object
     {
         if (!($type instanceof ReflectionNamedType)) {
             throw new InvalidArgumentException("The given property does not have a named type.");
