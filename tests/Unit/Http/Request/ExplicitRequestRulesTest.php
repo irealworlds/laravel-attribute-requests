@@ -5,9 +5,6 @@
 use Illuminate\Validation\Rules\In;
 use Ireal\AttributeRequests\Attributes\ValidateRule;
 use Ireal\AttributeRequests\Http\Request;
-use Illuminate\Contracts\Config\Repository as ConfigRepository;
-use Illuminate\Contracts\Validation\Factory as ValidationFactory;
-use Illuminate\Http\Request as BaseRequest;
 use Ireal\Tests\Fakes\Enums\{Color, DayOfTheWeek};
 
 it('should add rules from validation attributes', function (): void {
@@ -16,11 +13,8 @@ it('should add rules from validation attributes', function (): void {
         'stringBackedEnum' => $this->faker->randomElement(Color::cases())->value,
         'intBackedEnum' => $this->faker->randomElement(DayOfTheWeek::cases())->value,
     ];
-    $baseRequest = new BaseRequest($data);
-    $validationFactory = app()->make(ValidationFactory::class);
-    $configRepository = app()->make(ConfigRepository::class);
 
-    $request = new class ($baseRequest, $validationFactory, $configRepository) extends Request {
+    $request = new class (...getRequestDependencies($data)) extends Request {
         #[ValidateRule(new In([1, 2, 3, 4]))]
         public mixed $property1;
 

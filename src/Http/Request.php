@@ -2,26 +2,22 @@
 
 namespace Ireal\AttributeRequests\Http;
 
-
-use ArrayAccess;
-use BackedEnum;
-use Carbon\Carbon;
-use DateTimeInterface;
 use Illuminate\Contracts\Validation\{Factory as ValidationFactory, ValidatesWhenResolved, Validator};
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Request as BaseRequest;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\{Collection, Enumerable, Stringable};
+use Illuminate\Support\{Carbon, Collection, Stringable};
 use Illuminate\Validation\Rules\Enum;
 use Illuminate\Validation\ValidatesWhenResolvedTrait;
 use Ireal\AttributeRequests\Attributes\ValidateRule;
+use Ireal\AttributeRequests\Contracts\IRequestMappingService;
+use Ireal\AttributeRequests\Contracts\ITypeAnalysisService;
 use Ireal\AttributeRequests\Validation\ValidationRuleSet;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionException;
-use ReflectionNamedType;
 use ReflectionProperty;
-use SplFileInfo;
 
 class Request extends BaseRequest implements ValidatesWhenResolved
 {
@@ -31,12 +27,17 @@ class Request extends BaseRequest implements ValidatesWhenResolved
      * @param BaseRequest $request
      * @param ValidationFactory $_validationFactory
      * @param ConfigRepository $_configuration
+     * @param IRequestMappingService $_mappingService
+     * @param ITypeAnalysisService $_typeService
      * @throws ReflectionException
+     * @throws BindingResolutionException
      */
     public function __construct(
         BaseRequest $request,
         private readonly ValidationFactory $_validationFactory,
-        private readonly ConfigRepository $_configuration
+        private readonly ConfigRepository $_configuration,
+        private readonly IRequestMappingService $_mappingService,
+        private readonly ITypeAnalysisService $_typeService
     ) {
         // Pass the values from the request to the parent constructor
         parent::__construct(
@@ -58,10 +59,7 @@ class Request extends BaseRequest implements ValidatesWhenResolved
                 $value = $request->get($name) ?? $request->file($name);
 
                 // Cast the value to the correct type
-                if ($property->hasType()) {
-                    $type = $property->getType();
-                    $value = $this->_mapValueForType($value, $type);
-                }
+                $value = $this->_mappingService->mapRequestValueForProperty($value, $property);
 
                 $this->{$name} = $value;
                 if (is_scalar($value)) {
@@ -140,7 +138,7 @@ class Request extends BaseRequest implements ValidatesWhenResolved
      * @inheritDoc
      * @deprecated Use class properties instead.
      */
-    public function date($key, $format = null, $tz = null): ?\Illuminate\Support\Carbon
+    public function date($key, $format = null, $tz = null): ?Carbon
     {
         return parent::date($key, $format, $tz);
     }
@@ -296,17 +294,17 @@ class Request extends BaseRequest implements ValidatesWhenResolved
                 $rules->addRule($field, 'boolean');
             } else if ($type->getName() === 'string') {
                 $rules->addRule($field, 'string');
-            } else if ($this->_isDateType($type)) {
+            } else if ($this->_typeService->isDateType($type)) {
                 $rules->addRule($field, 'date');
-            } else if ($this->_isFileType($type)) {
+            } else if ($this->_typeService->isFileType($type)) {
                 $rules->addRule($field, 'file');
-            } else if ($this->_isNumericType($type)) {
+            } else if ($this->_typeService->isNumericType($type)) {
                 $rules->addRule($field, 'numeric');
-            } else if ($this->_isIterableType($type)) {
+            } else if ($this->_typeService->isIterableType($type)) {
                 $rules->addRule($field, 'array');
-            } else if ($this->_isBackedEnumType($type)) {
+            } else if ($this->_typeService->isBackedEnumType($type)) {
                 $rules->addRule($field, new Enum($type->getName()));
-            } else if ($this->_isMappableObjectType($type)) {
+            } else if ($this->_typeService->isMappableObjectType($type)) {
                 $rules->addRule($field, 'array');
 
                 if ($currentDepth <= $this->_configuration->get('requests.nested_validation_depth')) {
@@ -385,201 +383,5 @@ class Request extends BaseRequest implements ValidatesWhenResolved
                 }
             }
         });
-    }
-
-    /**
-     * Map the given {@link $value} to be assignable to the requested {@link $type}.
-     *
-     * @param mixed $value
-     * @param ReflectionNamedType $type
-     * @return mixed
-     * @throws ReflectionException
-     */
-    private function _mapValueForType(mixed $value, ReflectionNamedType $type): mixed {
-
-        switch ($type->getName()) {
-            case 'bool': {
-                if ($value === '0') {
-                    return false;
-                }
-                if ($value === '1') {
-                    return true;
-                }
-                return filter_var($value, FILTER_VALIDATE_BOOLEAN);
-            }
-            case Collection::class:
-            case Enumerable::class:
-            case ArrayAccess::class:
-            {
-                return new Collection($value);
-            }
-            case Carbon::class: {
-                return Carbon::parse($value);
-            }
-        }
-
-        if ($this->_isDateType($type)) {
-            return Carbon::parse($value)->toDateTime();
-        }
-
-        if ($this->_isBackedEnumType($type)) {
-            /** @var class-string<BackedEnum> $class */
-            $class = $type->getName();
-            return ($class)::from($value);
-        }
-
-        if ($this->_isMappableObjectType($type)) {
-            if ($type->isBuiltin()) {
-                return (object) $value;
-            } else {
-                $class = new ReflectionClass($type->getName());
-                $instance = $class->newInstance();
-                $value = (array)$value;
-                foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
-                    $key = $property->getName();
-                    if (isset($value[$key])) {
-                        $mappedValue = $this->_mapValueForType($value[$key], $property->getType());
-                        $instance->{$key} = $mappedValue;
-                    } else if ($property->getType()->allowsNull()) {
-                        $instance->{$key} = null;
-                    }
-                }
-                $value = $instance;
-            }
-        }
-
-        return $value;
-    }
-
-    /**
-     * Check if the given {@link $type} is an object to which an array can be mapped.
-     *
-     * @param ReflectionNamedType $type
-     * @return bool
-     * @throws ReflectionException
-     */
-    private function _isMappableObjectType(ReflectionNamedType $type): bool {
-        if ($type->isBuiltin()) {
-            return $type->getName() === 'object';
-        } else {
-            $class = new ReflectionClass($type->getName());
-
-            // Cannot map to interfaces
-            if ($class->isInterface()) {
-                return false;
-            }
-
-            // Enums should not be treated as mappable objects
-            if ($class->isEnum()) {
-                return false;
-            }
-
-            // If this class' constructor has required parameters, it cannot be mapped
-            if ($class->getConstructor()?->getNumberOfRequiredParameters()) {
-                return false;
-            }
-
-            return true;
-        }
-    }
-
-    /**
-     * Check if the given {@link $type} is numeric.
-     *
-     * @param ReflectionNamedType $type
-     * @return bool
-     * @throws ReflectionException
-     */
-    private function _isIterableType(ReflectionNamedType $type): bool {
-        if ($type->isBuiltin()) {
-            return in_array($type->getName(), [
-                'array',
-                'iterable'
-            ]);
-        } else {
-            $class = new ReflectionClass($type->getName());
-            return $class->isIterable();
-        }
-    }
-
-    /**
-     * Check if the given {@link $type} is numeric.
-     *
-     * @param ReflectionNamedType $type
-     * @return bool
-     */
-    private function _isNumericType(ReflectionNamedType $type): bool {
-        return in_array($type->getName(), [
-            'int',
-            'float',
-            'real'
-        ]);
-    }
-
-    /**
-     * Check if the given {@link $type} represents a backed enum.
-     *
-     * @param ReflectionNamedType $type
-     * @return bool
-     * @throws ReflectionException
-     */
-    private function _isBackedEnumType(ReflectionNamedType $type): bool
-    {
-        // Dates are not a built-in type
-        if ($type->isBuiltin()) {
-            return false;
-        }
-
-        // If the type implements the BackedEnum, then this is an enum
-        $class = new ReflectionClass($type->getName());
-        return $class->implementsInterface(BackedEnum::class);
-    }
-
-    /**
-     * Check if the given {@link $type} represents a file.
-     *
-     * @param ReflectionNamedType $type
-     * @return bool
-     * @throws ReflectionException
-     */
-    private function _isFileType(ReflectionNamedType $type): bool
-    {
-        // Dates are not a built-in type
-        if ($type->isBuiltin()) {
-            return false;
-        }
-
-        // If this type is exactly the SplFileInfo, then this is a file
-        if ($type->getName() === SplFileInfo::class) {
-            return true;
-        }
-
-        // If the type implements the SplFileInfo, then this is a file
-        $class = new ReflectionClass($type->getName());
-        return $class->isSubclassOf(SplFileInfo::class);
-    }
-
-    /**
-     * Check if the given {@link $type} represents a date.
-     *
-     * @param ReflectionNamedType $type
-     * @return bool
-     * @throws ReflectionException
-     */
-    private function _isDateType(ReflectionNamedType $type): bool
-    {
-        // Dates are not a built-in type
-        if ($type->isBuiltin()) {
-            return false;
-        }
-
-        // If this type is exactly the DateTimeInterface, then this is a date
-        if ($type->getName() === DateTimeInterface::class) {
-            return true;
-        }
-
-        // If the type implements the DateTimeInterface, then this is a date
-        $class = new ReflectionClass($type->getName());
-        return $class->implementsInterface(DateTimeInterface::class);
     }
 }
