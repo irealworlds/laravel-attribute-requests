@@ -1,4 +1,5 @@
 <?php
+
 /** @noinspection PhpUnhandledExceptionInspection */
 /** @noinspection PhpUnused */
 
@@ -21,7 +22,6 @@ it('should add rules from validation attributes', function (): void {
         #[ValidateRule('min:0')]
         #[ValidateRule('required')]
         public mixed $property2;
-
 
         /** @inheritDoc */
         public function validateResolved()

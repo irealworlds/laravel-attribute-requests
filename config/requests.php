@@ -1,4 +1,5 @@
 <?php
+
 return [
 
     /*
@@ -8,6 +9,6 @@ return [
     |
     | The max depth to go to when inferring validation rules for nested objects.
     |
-    */
+     */
     'nested_validation_depth' => 3,
 ];

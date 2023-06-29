@@ -4,13 +4,12 @@ namespace Ireal\AttributeRequests\Mappers;
 
 use Illuminate\Contracts\Container\BindingResolutionException;
 use InvalidArgumentException;
-use Ireal\AttributeRequests\Contracts\IRequestMappingService;
-use Ireal\AttributeRequests\Contracts\IRequestPropertyMapper;
+use Ireal\AttributeRequests\Contracts\{IRequestMappingService, IRequestPropertyMapper};
+use ReflectionClass;
 use ReflectionException;
 use ReflectionNamedType;
-use ReflectionType;
-use ReflectionClass;
 use ReflectionProperty;
+use ReflectionType;
 
 /**
  * @implements IRequestPropertyMapper<object>
@@ -40,7 +39,7 @@ readonly class ComplexObjectRequestPropertyMapper implements IRequestPropertyMap
 
         $class = new ReflectionClass($type->getName());
         $instance = $class->newInstance();
-        $input = (array)$input;
+        $input = (array) $input;
         foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
             $key = $property->getName();
             if (isset($input[$key])) {
