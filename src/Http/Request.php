@@ -2,17 +2,15 @@
 
 namespace Ireal\AttributeRequests\Http;
 
-use Illuminate\Contracts\Validation\{Factory as ValidationFactory, ValidatesWhenResolved, Validator};
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Illuminate\Contracts\Container\BindingResolutionException;
-use Illuminate\Http\Request as BaseRequest;
-use Illuminate\Http\UploadedFile;
+use Illuminate\Contracts\Validation\{Factory as ValidationFactory, ValidatesWhenResolved, Validator};
+use Illuminate\Http\{Request as BaseRequest, UploadedFile};
 use Illuminate\Support\{Carbon, Collection, Stringable};
 use Illuminate\Validation\Rules\Enum;
 use Illuminate\Validation\ValidatesWhenResolvedTrait;
 use Ireal\AttributeRequests\Attributes\ValidateRule;
-use Ireal\AttributeRequests\Contracts\IRequestMappingService;
-use Ireal\AttributeRequests\Contracts\ITypeAnalysisService;
+use Ireal\AttributeRequests\Contracts\{IRequestMappingService, ITypeAnalysisService};
 use Ireal\AttributeRequests\Validation\ValidationRuleSet;
 use ReflectionAttribute;
 use ReflectionClass;
@@ -277,7 +275,7 @@ class Request extends BaseRequest implements ValidatesWhenResolved
      */
     private function _setImplicitRulesForProperty(ReflectionProperty $property, ValidationRuleSet $rules, ?string $field = null, int $currentDepth = 0): void
     {
-        $field = $field ?? $property->getName();
+        $field ??= $property->getName();
 
         // Add rules inferred from the property type
         if ($property->hasType()) {
@@ -349,7 +347,7 @@ class Request extends BaseRequest implements ValidatesWhenResolved
             })
             ->map(fn(ReflectionAttribute $attribute) => $attribute->newInstance());
 
-        $field = $field ?? $property->getName();
+        $field ??= $property->getName();
 
         foreach ($attributes as $attribute) {
             $rules->addRule($field, $attribute->rule);

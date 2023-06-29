@@ -2,7 +2,6 @@
 
 namespace Ireal\AttributeRequests\Validation;
 
-
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Validation\{Rule, ValidationRule};
 use Illuminate\Support\Collection;
@@ -20,7 +19,6 @@ readonly class ValidationRuleSet implements Arrayable
     {
         $this->rules = new Collection();
     }
-
 
     /**
      * Add a new rule to this rule set.

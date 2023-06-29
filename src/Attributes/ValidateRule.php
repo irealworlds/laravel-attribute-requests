@@ -27,5 +27,4 @@ readonly class ValidateRule
             throw new InvalidArgumentException("The provided rule is not an instance of ValidationRule or a string.");
         }
     }
-
 }
