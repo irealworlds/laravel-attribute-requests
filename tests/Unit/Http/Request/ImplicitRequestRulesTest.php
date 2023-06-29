@@ -1,13 +1,14 @@
 <?php
+
 /** @noinspection PhpUnhandledExceptionInspection */
 /** @noinspection PhpUnused */
 
 use Carbon\Carbon;
+use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\Rules\Enum;
 use Ireal\AttributeRequests\Http\Request;
-use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Ireal\Tests\Fakes\{ComplexNumber, Enums\Color, NestedObject};
 
 it('should infer required or nullable from type', function () {
