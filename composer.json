@@ -1,0 +1,16 @@
+{
+    "name": "irealworlds/laravel-attribute-requests",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Ireal\\AttributeRequests\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Marin Calin",
+            "email": "marincalin2551@hotmail.com"
+        }
+    ],
+    "require": {}
+}
