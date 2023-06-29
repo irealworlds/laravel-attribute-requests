@@ -10,6 +10,7 @@ use ReflectionType;
 
 /**
  * @template TEnum of BackedEnum
+ *
  * @implements IRequestPropertyMapper<TEnum>
  */
 readonly class BackedEnumRequestPropertyMapper implements IRequestPropertyMapper
@@ -22,9 +23,10 @@ readonly class BackedEnumRequestPropertyMapper implements IRequestPropertyMapper
         if ($type instanceof ReflectionNamedType) {
             /** @var BackedEnum $class */
             $class = $type->getName();
+
             return ($class)::from($input);
         } else {
-            throw new InvalidArgumentException("The provided type is not a valid BackedEnum type.");
+            throw new InvalidArgumentException('The provided type is not a valid BackedEnum type.');
         }
     }
 }

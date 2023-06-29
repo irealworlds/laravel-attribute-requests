@@ -2,9 +2,9 @@
 
 namespace Ireal\AttributeRequests\Http;
 
-use Illuminate\Contracts\Validation\{Factory as ValidationFactory, ValidatesWhenResolved, Validator};
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Contracts\Validation\{Factory as ValidationFactory, ValidatesWhenResolved, Validator};
 use Illuminate\Http\Request as BaseRequest;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\{Carbon, Collection, Stringable};
@@ -24,11 +24,12 @@ class Request extends BaseRequest implements ValidatesWhenResolved
     use ValidatesWhenResolvedTrait;
 
     /**
-     * @param BaseRequest $request
-     * @param ValidationFactory $_validationFactory
-     * @param ConfigRepository $_configuration
+     * @param BaseRequest            $request
+     * @param ValidationFactory      $_validationFactory
+     * @param ConfigRepository       $_configuration
      * @param IRequestMappingService $_mappingService
-     * @param ITypeAnalysisService $_typeService
+     * @param ITypeAnalysisService   $_typeService
+     *
      * @throws ReflectionException
      * @throws BindingResolutionException
      */
@@ -74,6 +75,7 @@ class Request extends BaseRequest implements ValidatesWhenResolved
 
     /**
      * @inheritDoc
+     *
      * @deprecated Use class properties instead.
      */
     public function get(string $key, mixed $default = null): mixed
@@ -83,6 +85,7 @@ class Request extends BaseRequest implements ValidatesWhenResolved
 
     /**
      * @inheritDoc
+     *
      * @deprecated Use class properties instead.
      */
     public function input($key = null, $default = null)
@@ -92,6 +95,7 @@ class Request extends BaseRequest implements ValidatesWhenResolved
 
     /**
      * @inheritDoc
+     *
      * @deprecated Use class properties instead.
      */
     public function str($key, $default = null): Stringable
@@ -101,6 +105,7 @@ class Request extends BaseRequest implements ValidatesWhenResolved
 
     /**
      * @inheritDoc
+     *
      * @deprecated Use class properties instead.
      */
     public function string($key, $default = null): Stringable
@@ -110,6 +115,7 @@ class Request extends BaseRequest implements ValidatesWhenResolved
 
     /**
      * @inheritDoc
+     *
      * @deprecated Use class properties instead.
      */
     public function boolean($key = null, $default = false): bool
@@ -119,6 +125,7 @@ class Request extends BaseRequest implements ValidatesWhenResolved
 
     /**
      * @inheritDoc
+     *
      * @deprecated Use class properties instead.
      */
     public function integer($key, $default = 0): int
@@ -128,6 +135,7 @@ class Request extends BaseRequest implements ValidatesWhenResolved
 
     /**
      * @inheritDoc
+     *
      * @deprecated Use class properties instead.
      */
     public function float($key, $default = 0.0): float
@@ -137,6 +145,7 @@ class Request extends BaseRequest implements ValidatesWhenResolved
 
     /**
      * @inheritDoc
+     *
      * @deprecated Use class properties instead.
      */
     public function date($key, $format = null, $tz = null): ?Carbon
@@ -146,6 +155,7 @@ class Request extends BaseRequest implements ValidatesWhenResolved
 
     /**
      * @inheritDoc
+     *
      * @deprecated Use class properties instead.
      */
     public function enum($key, $enumClass)
@@ -155,6 +165,7 @@ class Request extends BaseRequest implements ValidatesWhenResolved
 
     /**
      * @inheritDoc
+     *
      * @deprecated Use class properties instead.
      */
     public function collect($key = null): Collection
@@ -164,6 +175,7 @@ class Request extends BaseRequest implements ValidatesWhenResolved
 
     /**
      * @inheritDoc
+     *
      * @deprecated Use class properties instead.
      */
     public function file($key = null, $default = null): array|UploadedFile|null
@@ -173,6 +185,7 @@ class Request extends BaseRequest implements ValidatesWhenResolved
 
     /**
      * @inheritDoc
+     *
      * @deprecated Use class properties instead.
      */
     public function filled($key): bool
@@ -182,6 +195,7 @@ class Request extends BaseRequest implements ValidatesWhenResolved
 
     /**
      * @inheritDoc
+     *
      * @deprecated Use class properties instead.
      */
     public function whenFilled($key, callable $callback, callable $default = null)
@@ -191,6 +205,7 @@ class Request extends BaseRequest implements ValidatesWhenResolved
 
     /**
      * @inheritDoc
+     *
      * @deprecated Use class properties instead.
      */
     public function anyFilled($keys): bool
@@ -200,6 +215,7 @@ class Request extends BaseRequest implements ValidatesWhenResolved
 
     /**
      * @inheritDoc
+     *
      * @deprecated Use class properties instead.
      */
     public function isNotFilled($key): bool
@@ -210,8 +226,9 @@ class Request extends BaseRequest implements ValidatesWhenResolved
     /**
      * Create the default validator instance.
      *
-     * @return Validator
      * @throws ReflectionException
+     *
+     * @return Validator
      */
     protected function validator(): Validator
     {
@@ -234,8 +251,9 @@ class Request extends BaseRequest implements ValidatesWhenResolved
     /**
      * Get the validation rules for this request.
      *
-     * @return array
      * @throws ReflectionException
+     *
+     * @return array
      */
     public function rules(): array
     {
@@ -253,11 +271,13 @@ class Request extends BaseRequest implements ValidatesWhenResolved
      * Add validation rules that should be applied to the given {@link $property} to the rule set.
      *
      * @param ReflectionProperty $property
-     * @param ValidationRuleSet $rules
-     * @param string|null $field The name of the field to add to the rule set. If null, the property name will be used.
-     * @param int $currentDepth
-     * @return void
+     * @param ValidationRuleSet  $rules
+     * @param string|null        $field        The name of the field to add to the rule set. If null, the property name will be used.
+     * @param int                $currentDepth
+     *
      * @throws ReflectionException
+     *
+     * @return void
      */
     private function _setRulesForProperty(ReflectionProperty $property, ValidationRuleSet $rules, ?string $field = null, int $currentDepth = 0): void
     {
@@ -269,11 +289,13 @@ class Request extends BaseRequest implements ValidatesWhenResolved
      * Add the implicit validation rules that should be applied to the given {@link $property} to the rule set.
      *
      * @param ReflectionProperty $property
-     * @param ValidationRuleSet $rules
-     * @param string|null $field The name of the field to add to the rule set. If null, the property name will be used.
-     * @param int $currentDepth
-     * @return void
+     * @param ValidationRuleSet  $rules
+     * @param string|null        $field        The name of the field to add to the rule set. If null, the property name will be used.
+     * @param int                $currentDepth
+     *
      * @throws ReflectionException
+     *
+     * @return void
      */
     private function _setImplicitRulesForProperty(ReflectionProperty $property, ValidationRuleSet $rules, ?string $field = null, int $currentDepth = 0): void
     {
@@ -293,19 +315,19 @@ class Request extends BaseRequest implements ValidatesWhenResolved
             // If the type provides useful info, add validators
             if ($type->getName() === 'bool') {
                 $rules->addRule($field, 'boolean');
-            } else if ($type->getName() === 'string') {
+            } elseif ($type->getName() === 'string') {
                 $rules->addRule($field, 'string');
-            } else if ($this->_typeService->isDateType($type)) {
+            } elseif ($this->_typeService->isDateType($type)) {
                 $rules->addRule($field, 'date');
-            } else if ($this->_typeService->isFileType($type)) {
+            } elseif ($this->_typeService->isFileType($type)) {
                 $rules->addRule($field, 'file');
-            } else if ($this->_typeService->isNumericType($type)) {
+            } elseif ($this->_typeService->isNumericType($type)) {
                 $rules->addRule($field, 'numeric');
-            } else if ($this->_typeService->isIterableType($type)) {
+            } elseif ($this->_typeService->isIterableType($type)) {
                 $rules->addRule($field, 'array');
-            } else if ($this->_typeService->isBackedEnumType($type)) {
+            } elseif ($this->_typeService->isBackedEnumType($type)) {
                 $rules->addRule($field, new Enum($type->getName()));
-            } else if ($this->_typeService->isMappableObjectType($type)) {
+            } elseif ($this->_typeService->isMappableObjectType($type)) {
                 $rules->addRule($field, 'array');
 
                 if ($currentDepth <= $this->_configuration->get('requests.nested_validation_depth')) {
@@ -316,7 +338,7 @@ class Request extends BaseRequest implements ValidatesWhenResolved
                             $this->_setRulesForProperty(
                                 $property,
                                 $rules,
-                                $field . '.' . $property->getName(),
+                                $field.'.'.$property->getName(),
                                 $currentDepth + 1
                             );
                         }
@@ -324,15 +346,15 @@ class Request extends BaseRequest implements ValidatesWhenResolved
                 }
             }
         }
-
     }
 
     /**
      * Add the explicit validation rules that should be applied to the given {@link $property} to the rule set.
      *
      * @param ReflectionProperty $property
-     * @param ValidationRuleSet $rules
-     * @param string|null $field The name of the field to add to the rule set. If null, the property name will be used.
+     * @param ValidationRuleSet  $rules
+     * @param string|null        $field    The name of the field to add to the rule set. If null, the property name will be used.
+     *
      * @return void
      */
     private function _setExplicitRulesForProperty(ReflectionProperty $property, ValidationRuleSet $rules, ?string $field = null): void
@@ -345,9 +367,10 @@ class Request extends BaseRequest implements ValidatesWhenResolved
                 }
 
                 $class = new ReflectionClass($attribute->getName());
+
                 return $class->isSubclassOf(ValidateRule::class);
             })
-            ->map(fn(ReflectionAttribute $attribute) => $attribute->newInstance());
+            ->map(fn (ReflectionAttribute $attribute) => $attribute->newInstance());
 
         $field = $field ?? $property->getName();
 
@@ -359,8 +382,9 @@ class Request extends BaseRequest implements ValidatesWhenResolved
     /**
      * Get the properties that should be mapped to the request body.
      *
-     * @return ReflectionProperty[]
      * @throws ReflectionException
+     *
+     * @return ReflectionProperty[]
      */
     private function _getBodyProperties(): array
     {

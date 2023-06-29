@@ -15,17 +15,16 @@ readonly class ValidateRule
     /**
      * @param ValidationRule|Stringable|string|mixed $rule
      */
-    public function __construct( mixed $rule) {
-
+    public function __construct(mixed $rule)
+    {
         if ($rule instanceof Stringable) {
             $this->rule = (string) $rule;
-        } else if (is_string($rule)) {
+        } elseif (is_string($rule)) {
             $this->rule = $rule;
-        } else if ($rule instanceof ValidationRule) {
+        } elseif ($rule instanceof ValidationRule) {
             $this->rule = $rule;
         } else {
-            throw new InvalidArgumentException("The provided rule is not an instance of ValidationRule or a string.");
+            throw new InvalidArgumentException('The provided rule is not an instance of ValidationRule or a string.');
         }
     }
-
 }

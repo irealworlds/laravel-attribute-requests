@@ -13,6 +13,7 @@ readonly class CarbonRequestPropertyMapper implements IRequestPropertyMapper
 {
     /**
      * @param ReflectionType|null $type
+     *
      * @inheritDoc
      */
     public function map(mixed $input, ReflectionType|null $type): Carbon

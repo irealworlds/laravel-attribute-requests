@@ -6,11 +6,11 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use InvalidArgumentException;
 use Ireal\AttributeRequests\Contracts\IRequestMappingService;
 use Ireal\AttributeRequests\Contracts\IRequestPropertyMapper;
+use ReflectionClass;
 use ReflectionException;
 use ReflectionNamedType;
-use ReflectionType;
-use ReflectionClass;
 use ReflectionProperty;
+use ReflectionType;
 
 /**
  * @implements IRequestPropertyMapper<object>
@@ -29,18 +29,19 @@ readonly class ComplexObjectRequestPropertyMapper implements IRequestPropertyMap
 
     /**
      * @inheritDoc
+     *
      * @throws ReflectionException
      * @throws BindingResolutionException
      */
     public function map(mixed $input, ReflectionType|null $type): object
     {
         if (!($type instanceof ReflectionNamedType)) {
-            throw new InvalidArgumentException("The given property does not have a named type.");
+            throw new InvalidArgumentException('The given property does not have a named type.');
         }
 
         $class = new ReflectionClass($type->getName());
         $instance = $class->newInstance();
-        $input = (array)$input;
+        $input = (array) $input;
         foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
             $key = $property->getName();
             if (isset($input[$key])) {
@@ -50,10 +51,11 @@ readonly class ComplexObjectRequestPropertyMapper implements IRequestPropertyMap
                     $property->getType()
                 );
                 $instance->{$key} = $mappedValue;
-            } else if ($property->getType()->allowsNull()) {
+            } elseif ($property->getType()->allowsNull()) {
                 $instance->{$key} = null;
             }
         }
+
         return $instance;
     }
 }
