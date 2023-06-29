@@ -13,6 +13,7 @@ use Ireal\Tests\Fakes\ComplexNumber;
 use Ireal\Tests\Fakes\Enums\Color;
 use Ireal\Tests\Fakes\Enums\DayOfTheWeek;
 use Ireal\Tests\Fakes\NestedObject;
+use function Pest\Faker\fake;
 
 it('should map null to nullable values', function (array $data): void {
     // Arrange

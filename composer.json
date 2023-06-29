@@ -32,6 +32,7 @@
     },
     "require-dev": {
         "pestphp/pest": "^2.8",
+        "pestphp/pest-plugin-faker": "^2.0",
         "mockery/mockery": "^1.6",
         "orchestra/testbench": "^8.5"
     },
